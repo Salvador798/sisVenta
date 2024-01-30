@@ -99,27 +99,27 @@
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                                        <form action="{{ route('productos.edit',['producto' => $item]) }}">
+                                        <form action="{{ route('productos.edit', ['producto' => $item]) }}">
                                             <button type="submit" class="btn btn-warning">Editar</button>
                                         </form>
-                                        
+
                                         <button type="button" class="btn btn-success" data-bs-toggle="modal"
                                             data-bs-target="#verModal-{{ $item->id }}">Ver</button>
                                         @if ($item->estado == 1)
                                             <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#confirmModal-{{ $item->id }}">Eliminar</button>
+                                                data-bs-target="#confirmModal-{{ $item->id }}">Eliminar</button>
                                         @else
                                             <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#confirmModal-{{ $item->id }}">Restaurar</button>
+                                                data-bs-target="#confirmModal-{{ $item->id }}">Restaurar</button>
                                         @endif
-                                        
+
                                     </div>
                                 </td>
                             </tr>
 
                             <!-- Ver -->
-                            <div class="modal fade" id="verModal-{{ $item->id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
-                                aria-hidden="true">
+                            <div class="modal fade" id="verModal-{{ $item->id }}" tabindex="-1"
+                                aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-scrollable">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -129,19 +129,24 @@
                                         </div>
                                         <div class="modal-body">
                                             <div class="row mb-3">
-                                                <label for=""><span class="fw-bolder">Descripción</span> {{ $item->descripcion }}</label>
+                                                <label for=""><span class="fw-bolder">Descripción</span>
+                                                    {{ $item->descripcion }}</label>
                                             </div>
                                             <div class="row mb-3">
-                                                <label for=""><span class="fw-bolder">Fecha de vencimiento</span> {{ $item->fecha_vencimiento=='' ? 'No tiene' : $item->fecha_vencimiento }}</label>
+                                                <label for=""><span class="fw-bolder">Fecha de vencimiento</span>
+                                                    {{ $item->fecha_vencimiento == '' ? 'No tiene' : $item->fecha_vencimiento }}</label>
                                             </div>
                                             <div class="row mb-3">
-                                                <label for=""><span class="fw-bolder">Stock</span> {{ $item->stock }}</label>
+                                                <label for=""><span class="fw-bolder">Stock</span>
+                                                    {{ $item->stock }}</label>
                                             </div>
                                             <div class="row mb-3">
                                                 <label class="fw-bolder">Image</label>
                                                 <div>
                                                     @if ($item->img_path != null)
-                                                        <img src="{{ Storage::url('public/productos/'.$item->img_path) }}" alt="{{ $item->nombre }}" class="img-fluid img-thumbnail border border-4 rounded">
+                                                        <img src="{{ Storage::url('public/productos/' . $item->img_path) }}"
+                                                            alt="{{ $item->nombre }}"
+                                                            class="img-fluid img-thumbnail border border-4 rounded">
                                                     @else
                                                         <img src="" alt="{{ $item->nombre }}">
                                                     @endif
@@ -150,8 +155,8 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary"
-                                                data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                                data-bs-dismiss="modal">Cerrar</button>
+                                            <button type="button" class="btn btn-primary">Guardar</button>
                                         </div>
                                     </div>
                                 </div>

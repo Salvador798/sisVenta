@@ -18,7 +18,7 @@
             <li class="breadcrumb-item active">Crear Compras</li>
         </ol>
     </div>
-    <form action="" method="POST">
+    <form action="{{ route('compras.store') }}" method="POST">
         @csrf
 
         <div class="container mt-4">
@@ -106,7 +106,8 @@
                                             <tr>
                                                 <th></th>
                                                 <th colspan="4">total</th>
-                                                <th colspan="2"><span id="total">0</span></th>
+                                                <th colspan="2"><input type="hiddenn" name="total" value="0"
+                                                        id="inputTotal"><span id="total">0</span></th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -137,6 +138,9 @@
                                         <option value="{{ $item->id }}">{{ $item->persona->razon_social }}</option>
                                     @endforeach
                                 </select>
+                                @error('proveedore_id')
+                                    <small class="text-danger">{{ '*' . $message }}</small>
+                                @enderror
                             </div>
 
                             <!-- Tipo de Comprobbante -->
@@ -148,6 +152,9 @@
                                         <option value="{{ $item->id }}">{{ $item->tipo_comprobante }}</option>
                                     @endforeach
                                 </select>
+                                @error('comprobante_id')
+                                    <small class="text-danger">{{ '*' . $message }}</small>
+                                @enderror
                             </div>
 
                             <!-- Número de Comprobante -->
@@ -155,6 +162,9 @@
                                 <label for="numero_comprobante" class="form-label">Número de Comprobante</label>
                                 <input type="text" name="numero_comprobante" id="numero_comprobante"
                                     class="form-control" required>
+                                @error('numero_comprobante')
+                                    <small class="text-danger">{{ '*' . $message }}</small>
+                                @enderror
                             </div>
 
                             <!-- Impuesto -->
@@ -162,6 +172,9 @@
                                 <label for="impuesto" class="form-label">Impuesto</label>
                                 <input type="text" name="impuesto" id="impuesto" class="form-control border-success"
                                     readonly>
+                                @error('impuesto')
+                                    <small class="text-danger">{{ '*' . $message }}</small>
+                                @enderror
                             </div>
 
                             <!-- Fecha -->
@@ -169,6 +182,11 @@
                                 <label for="fecha" class="form-label">Fecha</label>
                                 <input type="date" name="fecha" id="fecha" class="form-control border-success"
                                     readonly value="<?php echo date('Y-m-d'); ?>">
+                                <?php
+                                use Carbon\Carbon;
+                                $fecha_hora = Carbon::now()->toDateTimeString();
+                                ?>
+                                <input type="hidden" name="fecha_hora" value="{{ $fecha_hora }}">
                             </div>
 
                             <!-- Botones -->
@@ -263,13 +281,15 @@
             $('#sumas').html(sumas);
             $('#igv').html(igv);
             $('#total').html(total);
+            $('#impuesto').val(impuesto + '%');
+            $('#inputTotal').val(total);
 
 
             limpiarCampos();
             disableButtons();
         }
 
-        function disableButtons(){
+        function disableButtons() {
             if (total == 0) {
                 $('#guardar').hide();
                 $('#cancelar').hide();
@@ -304,10 +324,15 @@
 
                         let fila = '<tr id="fila' + cont + '">' +
                             '<th>' + (cont + 1) + '</th>' +
-                            '<th>' + nameProducto + '</th>' +
-                            '<th>' + cantidad + '</th>' +
-                            '<th>' + precioCompra + '</th>' +
-                            '<th>' + precioVenta + '</th>' +
+                            '<th><input type="hidden" name="arrayidproducto[]" value="' + idProducto + '">' + nameProducto +
+                            '</th>' +
+                            '<th><input type="hidden" name="arraycantidad[]" value="' + cantidad + '">' + cantidad +
+                            '</th>' +
+                            '<th><input type="hidden" name="arraypreciocompra[]" value="' + precioCompra + '">' +
+                            precioCompra +
+                            '</th>' +
+                            '<th><input type="hidden" name="arrayprecioventa[]" value="' + precioVenta + '">' +
+                            precioVenta + '</th>' +
                             '<th>' + subtotal[cont] + '</th>' +
                             '<th><button class="btn btn-danger" type="button" onClick="eliminarProducto(' + cont +
                             ')"><i class="fa-solid fa-trash"></i></button></th>' +
@@ -323,6 +348,8 @@
                         $('#sumas').html(sumas);
                         $('#igv').html(igv);
                         $('#total').html(total);
+                        $('#impuesto').val(igv);
+                        $('#inputTotal').val(total);
 
                     } else {
                         showModal('Precio de compra incorrecto');
@@ -349,9 +376,14 @@
             $('#sumas').html(sumas);
             $('#igv').html(igv);
             $('#total').html(total);
+            $('#impuesto').val(igv);
+            $('#inputTotal').val(total);
 
             // Eliminar la fila de la tabla
             $('#fila' + indice).remove();
+
+            disableButtons();
+
         }
 
         function limpiarCampos() {
